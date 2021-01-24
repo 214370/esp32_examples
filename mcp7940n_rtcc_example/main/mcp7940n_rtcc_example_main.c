@@ -22,14 +22,14 @@
 static const char *TAG = "i2c_rtcc";
 
 // I2C 
-#define I2C_MASTER_TX_BUF_DISABLE 			0 					/*!< I2C master doesn't need buffer */
-#define I2C_MASTER_RX_BUF_DISABLE 			0 					/*!< I2C master doesn't need buffer */
-#define WRITE_BIT 							I2C_MASTER_WRITE	/*!< I2C master write */
-#define READ_BIT 							I2C_MASTER_READ    	/*!< I2C master read */
-#define ACK_CHECK_EN 						0x1            		/*!< I2C master will check ack from slave*/
-#define ACK_CHECK_DIS 						0x0           		/*!< I2C master will not check ack from slave */
-#define ACK_VAL 							0x0                 /*!< I2C ack value */
-#define NACK_VAL 							0x1                	/*!< I2C nack value */
+#define I2C_MASTER_TX_BUF_DISABLE 			(0) 			/*!< I2C master doesn't need buffer */
+#define I2C_MASTER_RX_BUF_DISABLE 			(0) 			/*!< I2C master doesn't need buffer */
+#define WRITE_BIT 					I2C_MASTER_WRITE	/*!< I2C master write */
+#define READ_BIT 					I2C_MASTER_READ    	/*!< I2C master read */
+#define ACK_CHECK_EN 					(0x1)            	/*!< I2C master will check ack from slave*/
+#define ACK_CHECK_DIS 					(0x0)           	/*!< I2C master will not check ack from slave */
+#define ACK_VAL 					(0x0)                   /*!< I2C ack value */
+#define NACK_VAL 					(0x1)                	/*!< I2C nack value */
 
 
 static gpio_num_t i2c_gpio_sda = 21;
@@ -38,8 +38,8 @@ static uint32_t i2c_frequency = 100000;
 static i2c_port_t i2c_port = I2C_NUM_0;
 
 // RTC
-#define RTC_ADR 							0x6F
-#define RTC_BUF_SIZE 						8
+#define RTC_ADR 					(0x6F)
+#define RTC_BUF_SIZE 					(8)
 uint8_t rtc_buff[RTC_BUF_SIZE];
 uint8_t wkday_num;
 char sec, min, hr, date, year, wkday, month;
@@ -65,45 +65,45 @@ static esp_err_t i2c_master_driver_initialize()
 
 static esp_err_t i2c_set(uint8_t chip_addr, uint8_t data_addr, char *str, uint8_t len)
 {
-	esp_err_t ret;
+    esp_err_t ret;
 
     ret = i2c_master_driver_initialize();
-	if(ret != ESP_OK) ESP_LOGE("i2c_write", "Master driver init error");
+    if(ret != ESP_OK) ESP_LOGE("i2c_write", "Master driver init error");
 
     ret = i2c_driver_install(i2c_port, I2C_MODE_MASTER, I2C_MASTER_RX_BUF_DISABLE, I2C_MASTER_TX_BUF_DISABLE, 0);
-	if(ret != ESP_OK) ESP_LOGE("i2c_write", "Master driver install error");
+    if(ret != ESP_OK) ESP_LOGE("i2c_write", "Master driver install error");
 
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();
 
     ret = i2c_master_start(cmd);
-	if(ret != ESP_OK) ESP_LOGE("i2c_write", "Master start error");
+    if(ret != ESP_OK) ESP_LOGE("i2c_write", "Master start error");
 
     ret = i2c_master_write_byte(cmd, chip_addr << 1 | WRITE_BIT, ACK_CHECK_EN);
-	if(ret != ESP_OK) ESP_LOGE("i2c_write", "Master write byte (chip address) error");
+    if(ret != ESP_OK) ESP_LOGE("i2c_write", "Master write byte (chip address) error");
 
     ret = i2c_master_write_byte(cmd, data_addr, ACK_CHECK_EN);
-	if(ret != ESP_OK) ESP_LOGE("i2c_write", "Master write byte (data address) error");
+    if(ret != ESP_OK) ESP_LOGE("i2c_write", "Master write byte (data address) error");
 
     for (int i = 0; i < len; i++) {
         ret = i2c_master_write_byte(cmd, str[i], ACK_CHECK_EN);
-		if(ret != ESP_OK) ESP_LOGE("i2c_write", "Master write byte (data) error");
+	if(ret != ESP_OK) ESP_LOGE("i2c_write", "Master write byte (data) error");
     }
 
     ret = i2c_master_stop(cmd);
-	if(ret != ESP_OK) ESP_LOGE(TAG, "Master stop error");
+    if(ret != ESP_OK) ESP_LOGE(TAG, "Master stop error");
 
     ret = i2c_master_cmd_begin(i2c_port, cmd, 1000 / portTICK_RATE_MS);
 	switch(ret) {
 		case ESP_ERR_INVALID_ARG: 	ESP_LOGE("i2c_write", "Parameter error."); break;
-		case ESP_FAIL:				ESP_LOGE("i2c_write", "Sending command error, slave doesn’t ACK the transfer."); break;
-		case ESP_ERR_INVALID_STATE: ESP_LOGE("i2c_write", "I2C driver not installed or not in master mode."); break;
+		case ESP_FAIL:			ESP_LOGE("i2c_write", "Sending command error, slave doesn’t ACK the transfer."); break;
+		case ESP_ERR_INVALID_STATE:     ESP_LOGE("i2c_write", "I2C driver not installed or not in master mode."); break;
 		case ESP_ERR_TIMEOUT:		ESP_LOGE("i2c_write", "Operation timeout because the bus is busy."); break;
-		default:					break;
+		default:			break;
 	}
 
     i2c_cmd_link_delete(cmd);
     i2c_driver_delete(i2c_port);
-	return ret;
+    return ret;
 }
 
 static esp_err_t i2c_get(uint8_t chip_addr, uint8_t data_addr, uint8_t len)
@@ -117,36 +117,36 @@ static esp_err_t i2c_get(uint8_t chip_addr, uint8_t data_addr, uint8_t len)
     } 
 
     ret = i2c_master_driver_initialize();
-	if(ret != ESP_OK) ESP_LOGE("i2c_read", "Master driver init error");
+    if(ret != ESP_OK) ESP_LOGE("i2c_read", "Master driver init error");
 
     ret = i2c_driver_install(i2c_port, I2C_MODE_MASTER, I2C_MASTER_RX_BUF_DISABLE, I2C_MASTER_TX_BUF_DISABLE, 0);
-	if(ret != ESP_OK) ESP_LOGE("i2c_read", "Master driver install error");
+    if(ret != ESP_OK) ESP_LOGE("i2c_read", "Master driver install error");
 
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();
 
     ret = i2c_master_start(cmd);
-	if(ret != ESP_OK) ESP_LOGE("i2c_read", "Master start error");
+    if(ret != ESP_OK) ESP_LOGE("i2c_read", "Master start error");
 
     ret = i2c_master_write_byte(cmd, chip_addr << 1 | WRITE_BIT, ACK_CHECK_EN);
-	if(ret != ESP_OK) ESP_LOGE("i2c_read", "Master write byte (chip address) error");
+    if(ret != ESP_OK) ESP_LOGE("i2c_read", "Master write byte (chip address) error");
 
     i2c_master_write_byte(cmd, data_addr, ACK_CHECK_EN);
-	if(ret != ESP_OK) ESP_LOGE("i2c_read", "Master write byte (data address) error");
+    if(ret != ESP_OK) ESP_LOGE("i2c_read", "Master write byte (data address) error");
 
     ret = i2c_master_start(cmd);
 
     ret = i2c_master_write_byte(cmd, chip_addr << 1 | READ_BIT, ACK_CHECK_EN);
-	if(ret != ESP_OK) ESP_LOGE("i2c_read", "Master read cmd error");
+    if(ret != ESP_OK) ESP_LOGE("i2c_read", "Master read cmd error");
     if (len > 1) {
         ret = i2c_master_read(cmd, data, len - 1, ACK_VAL);
-		if(ret != ESP_OK) ESP_LOGE("i2c_read", "Master reading data error");
+	if(ret != ESP_OK) ESP_LOGE("i2c_read", "Master reading data error");
     }
     ret = i2c_master_read_byte(cmd, data + len - 1, NACK_VAL);
-	if(ret != ESP_OK) ESP_LOGE("i2c_read", "Master NACK error");
+    if(ret != ESP_OK) ESP_LOGE("i2c_read", "Master NACK error");
 
     i2c_master_stop(cmd);
     ret = i2c_master_cmd_begin(i2c_port, cmd, 1000 / portTICK_RATE_MS);
-	if(ret != ESP_OK) ESP_LOGE("i2c_read", "Master cmd begin error");
+    if(ret != ESP_OK) ESP_LOGE("i2c_read", "Master cmd begin error");
 
     i2c_cmd_link_delete(cmd);
 
@@ -161,7 +161,7 @@ static esp_err_t i2c_get(uint8_t chip_addr, uint8_t data_addr, uint8_t len)
         if (len % RTC_BUF_SIZE) {
             printf("\r\n");
         }
-	}
+    }
 
     free(data);
     i2c_driver_delete(i2c_port);
@@ -173,9 +173,9 @@ static esp_err_t i2c_get(uint8_t chip_addr, uint8_t data_addr, uint8_t len)
 static int RTC_Is_Osc_Run() 
 {
     if(rtc_buff[3] & 0x20) 
-		return 0;
+	return 0;
     else                   
-		return -1;
+	return -1;
 }
 
 // Sets ST bit                                              
@@ -202,7 +202,7 @@ static void RTC_Disable_Osc()
         ESP_LOGI(TAG, "RTC_Disable_Osc: RTC write success.");
     }
     else {
-		ESP_LOGI(TAG, "RTC_Disable_Osc: RTC write failure.");
+	ESP_LOGI(TAG, "RTC_Disable_Osc: RTC write failure.");
     }
 }
 
@@ -214,11 +214,11 @@ static int Clear_Power_Fail()
     i2c_set(RTC_ADR, 0x03, mydata, sizeof(mydata));
     vTaskDelay(50 / portTICK_PERIOD_MS); // 32 cycles
     if(RTC_Is_Osc_Run() != 0) {
-		ESP_LOGI(TAG, "RTC disabled, OSC is not running.");
-		return 0;
+	ESP_LOGI(TAG, "RTC disabled, OSC is not running.");
+	return 0;
     }
     else {
-		return -1;
+	return -1;
     }
 }
 */
@@ -228,12 +228,12 @@ static void GetWeekDay()
 {
     switch(wkday_num) {
         case 1: strcpy(sDay, "Ned."); break;	// Sun
-		case 2: strcpy(sDay, "Pon."); break;	// Mon
+	case 2: strcpy(sDay, "Pon."); break;	// Mon
         case 3: strcpy(sDay, "Uto."); break;	// Tue
-		case 4: strcpy(sDay, "Sri."); break;	// ...
-		case 5: strcpy(sDay, "Cet."); break;
-		case 6: strcpy(sDay, "Pet."); break;
-		case 7: strcpy(sDay, "Sub."); break;
+	case 4: strcpy(sDay, "Sri."); break;	// ...
+	case 5: strcpy(sDay, "Cet."); break;
+	case 6: strcpy(sDay, "Pet."); break;
+	case 7: strcpy(sDay, "Sub."); break;
     }
 }
 
@@ -298,33 +298,33 @@ void i2c_task(void *pvParameter)
 {
     int ret;
 
-	// Uncomment this section to write time defined in strings above
-	// Write once then comment this section
-	/*
+    // Uncomment this section to write time defined in strings above
+    // Write once then comment this section
+    /*
     ret = RTC_Write_Time_Date();
     if(ret == 0) {
         ESP_LOGI(TAG, "RTC_Write_Time_Date: RTC write success.");
     }
     else {
-		ESP_LOGE(TAG, "RTC_Write_Time_Date: RTC write failure.");
+	ESP_LOGE(TAG, "RTC_Write_Time_Date: RTC write failure.");
     }
     */
 
     while(1) {
-		vTaskDelay(1000 / portTICK_PERIOD_MS);
-		ret = i2c_get(RTC_ADR, 0x00, RTC_BUF_SIZE);
+	vTaskDelay(1000 / portTICK_PERIOD_MS);
+	ret = i2c_get(RTC_ADR, 0x00, RTC_BUF_SIZE);
         if(ret != 0) {
             ESP_LOGE(TAG, "RTC Task reading: RTC read failure.");
-			RTC_Enable_Osc();
+	    RTC_Enable_Osc();
         }
-		else {
-			RTC_Format_Time();
-			// Write time & date 
-			printf("%d.%d.20%d. %d:%d:%d\r\n", date, month, year, hr, min, sec);
-			if(RTC_Is_Osc_Run() != 0) { 
-				printf("Osc is not running!!!\r\n");
-			}
-		}
+	else {
+	    RTC_Format_Time();
+	    // Write time & date 
+	    printf("%d.%d.20%d. %d:%d:%d\r\n", date, month, year, hr, min, sec);
+	    if(RTC_Is_Osc_Run() != 0) { 
+		printf("Osc is not running!!!\r\n");
+	    }
+	}
     }
 }
 
