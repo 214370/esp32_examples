@@ -20,4 +20,4 @@ Connect ER-TFTM035-6 board to individual GPIOs:
   * RES - GPIO_26
   * BCKL - GPIO_27
 
-
+For the rest consult ER-TFTM035-6 datasheet.
