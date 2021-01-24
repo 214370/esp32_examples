@@ -59,11 +59,11 @@ static void uart_task()
     while (1) {
     	// Read data from the UART
     	int len = uart_read_bytes(uart_num, data, BUF_SIZE, 20 / portTICK_RATE_MS);
-    	// Write data to the UART
+    	// Write test string to the UART if letter 'g' is the first received character
     	if(data[0] == 'g') {
-    		uart_write_bytes(uart_num, (const char*) test_str, strlen(test_str));
-    		//uart_write_bytes(uart_num, (const char *) data, len);
-   		data[0] = 0;
+    	    uart_write_bytes(uart_num, (const char*) test_str, strlen(test_str));
+    	    //uart_write_bytes(uart_num, (const char *) data, len);
+   	    data[0] = 0;
     	}
     }
 }
