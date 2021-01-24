@@ -9,10 +9,15 @@ Useful to check your hardware and connections :)
 
 ## Hardware Setup
 
-Tested on ESP32 DEVKITV1 board.
+Tested on DOIT ESP32 DEVKIT1 board.
     
 Connect ER-TFTM035-6 board to individual GPIOs:
 
-  * SDA - GPIO21
-  * SCL - GPIO22
+  * CS - GPIO_5
+  * SCL - GPIO_18
+  * DC - GPIO_25
+  * SDA - GPIO_23
+  * RES - GPIO_26
+  * BCKL - GPIO_27
+
 
