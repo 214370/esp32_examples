@@ -1,11 +1,6 @@
 /* 
     ili9488_bitbang_example
 
-    rewrite of ER-TFTM035-6 provided code example 
-    for use with v4.0-beta2
-    tested on ESP32 DEVKITV1 board
-    useful to check your hardware and connections :)
-
     This example code is in the Public Domain (or CC0 licensed, at your option.)
 
     Unless required by applicable law or agreed to in writing, this
@@ -22,18 +17,18 @@
 #define BLACK		0x0000
 #define BLUE		0x001F
 #define GREEN		0x07E0
-#define RED			0xF800
+#define RED		0xF800
 #define YELLOW		0xFFE0
 #define WHITE		0xFFFF
 
-#define BLINK_GPIO 	GPIO_NUM_2
+#define BLINK_GPIO 	GPIO_NUM_2					// LED built in DOIT ESP32 DEVKIT1
 
-#define CS 			GPIO_NUM_5
-#define SCL			GPIO_NUM_18
-#define DC			GPIO_NUM_25   
-#define SDA			GPIO_NUM_23						
-#define RES			GPIO_NUM_26  					// Reset
-#define BCKL	    GPIO_NUM_27  					// Backlight
+#define CS 		GPIO_NUM_5
+#define SCL		GPIO_NUM_18
+#define DC		GPIO_NUM_25   
+#define SDA		GPIO_NUM_23						
+#define RES		GPIO_NUM_26  					// Reset
+#define BCKL	    	GPIO_NUM_27  					// Backlight
 
 void CS_LOW()    { gpio_set_level(CS, 0);   }
 void CS_HIGH()   { gpio_set_level(CS, 1);   }
@@ -191,15 +186,15 @@ void ili9488_init()
     Write_Cmd_Data(0x0F);
 	
     Write_Cmd(0xC0);      					// Power Control 1 
-    Write_Cmd_Data(0x17);   				// Vreg1out 
-    Write_Cmd_Data(0x15);   				// Verg2out 
+    Write_Cmd_Data(0x17);   					// Vreg1out 
+    Write_Cmd_Data(0x15);   					// Verg2out 
 	 
     Write_Cmd(0xC1);      					// Power Control 2     
-    Write_Cmd_Data(0x41);       			// VGH,VGL 
+    Write_Cmd_Data(0x41);       				// VGH,VGL 
 	 
     Write_Cmd(0xC5);      					// Power Control 3 
     Write_Cmd_Data(0x00); 
-    Write_Cmd_Data(0x12);   				// Vcom 
+    Write_Cmd_Data(0x12);   					// Vcom 
     Write_Cmd_Data(0x80);
 	 
     Write_Cmd(0x36);      					// Memory Access 
@@ -209,26 +204,26 @@ void ili9488_init()
     Write_Cmd_Data(0x66); 					// 18 bit    
 	 
     Write_Cmd(0xB0);      					// Interface Mode Control 
-    Write_Cmd_Data(0x80);   				// SDO not in use
+    Write_Cmd_Data(0x80);   					// SDO not in use
 	 
     Write_Cmd(0xB1);      					// Frame rate 
-    Write_Cmd_Data(0xA0);   				// 60Hz 
+    Write_Cmd_Data(0xA0);   					// 60Hz 
 	 
     Write_Cmd(0xB4);      					// Display Inversion Control 
-    Write_Cmd_Data(0x02);   				// 2-dot 
+    Write_Cmd_Data(0x02);   					// 2-dot 
 	 
     Write_Cmd(0xB6);      					// Display Function Control RGB/MCU Interface Control 
-    Write_Cmd_Data(0x02);   				// MCU 
-    Write_Cmd_Data(0x02);   				// Source, Gate scan direction 
+    Write_Cmd_Data(0x02);   					// MCU 
+    Write_Cmd_Data(0x02);   					// Source, Gate scan direction 
 	  
     Write_Cmd(0xE9);      					// Set Image Function
-    Write_Cmd_Data(0x00);   				// Disable 24 bit data
+    Write_Cmd_Data(0x00);   					// Disable 24 bit data
 	 
     Write_Cmd(0xF7);      					// Adjust Control 
     Write_Cmd_Data(0xA9);     
     Write_Cmd_Data(0x51);     
     Write_Cmd_Data(0x2C);     
-    Write_Cmd_Data(0x82);   				// D7 stream, loose 
+    Write_Cmd_Data(0x82);   					// D7 stream, loose 
 
     Write_Cmd(0x11); 						// Sleep out
     vTaskDelay(120 / portTICK_PERIOD_MS);
@@ -260,9 +255,9 @@ void Fill_Screen(uint16_t bColor) {
 
 void init_lcd()
 {
-    init_pins();							// Init all LCD pins as output pins
-    ili9488_init();							// Initial sequence for ILI9488
-    BCKL_HIGH();							// Turn on backlight
+    init_pins();						// Init all LCD pins as output pins
+    ili9488_init();						// Initial sequence for ILI9488
+    BCKL_HIGH();						// Turn on backlight
 }
 
 void blink_task(void *pvParameter)
