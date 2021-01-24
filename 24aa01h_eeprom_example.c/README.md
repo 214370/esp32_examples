@@ -10,8 +10,8 @@ This example shows how to use 24AA01H EEPROM chip using ESP32.
 
 Connect 24AA01H chip to individual GPIOs:
 
-  * Channel 0 - GPIO18
-  * Channel 1 - GPIO19
-  * Channel 2 - GPIO4
-  * Channel 3 - GPIO5
+  * SDA - GPIO21
+  * SCL - GPIO22
+
+The I2C lines should have a pull-up resistors (1k - 10k).
 
