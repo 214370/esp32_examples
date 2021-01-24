@@ -1,6 +1,7 @@
 # UART2 Echo Example
 
 This is an example which echoes any data it receives on UART2 back to the sender.
+It writes test string to the UART if letter 'g' is the first received character.
 
 ## Setup
 
@@ -8,5 +9,6 @@ This is an example which echoes any data it receives on UART2 back to the sender
 
   * UART_TXD  (GPIO_NUM_33)
   * UART_RXD  (GPIO_NUM_35)
+  * GND       (GND)
 
 
