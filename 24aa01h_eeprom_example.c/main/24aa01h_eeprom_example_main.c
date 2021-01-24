@@ -176,9 +176,9 @@ void eprom_task(void *pvParameter)
 //////////////////////////////////////// main ///////////////////////////////////////
 void app_main()
 {
-	// Write once, comment this section	and flash again to check the content of EEPROM
+	// Write once, comment this section, and flash again to check the content of EEPROM
 	/*
-	char tmp[] = { 'i', 'l', 'i', 'j', 'a', 'X', 'r' }; // define size in EPR_BUF_SIZE
+	char tmp[] = { 'i', 'l', 'i', 'j', 'a', 'm', 'r' }; // define size in EPR_BUF_SIZE
 	esp_err_t ret;
 	ret = i2c_set(EPR_ADR, 0x00, tmp, sizeof(tmp));
 	if(ret != ESP_OK) ESP_LOGE(TAG, "EEPROM write failure.");
