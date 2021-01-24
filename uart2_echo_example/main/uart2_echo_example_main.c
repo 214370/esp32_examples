@@ -15,7 +15,7 @@
 #include "driver/uart.h"
 #include "driver/gpio.h"
 
-/**
+/*
  * This is an example which echos any data it receives on UART back to the sender,
  * with hardware flow control turned off. It does not use UART driver event queue.
  *
@@ -63,7 +63,7 @@ static void uart_task()
     	if(data[0] == 'g') {
     		uart_write_bytes(uart_num, (const char*) test_str, strlen(test_str));
     		//uart_write_bytes(uart_num, (const char *) data, len);
-   			data[0] = 0;
+   		data[0] = 0;
     	}
     }
 }
